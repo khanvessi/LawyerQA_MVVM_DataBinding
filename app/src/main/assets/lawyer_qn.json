@@ -1,0 +1,95 @@
+{
+  "code": "00",
+  "desc": "Success",
+  "success": true,
+  "comment": {
+    "comments": [
+      {
+        "commentId": 1,
+        "parentCommentId": 0,
+        "questionId": 2,
+        "comment": "daud testing comments",
+        "commentBy": "Admin",
+        "commentById": "1",
+        "commentAt": "A minute ago",
+        "commentByUrl": "Attachments/ProfilePics/241021_072035_0B8BD158_085F_4F1C_A16C_6AE1BCA1D380.jpeg",
+        "replyToId": 0,
+        "replyToName": "",
+        "commentAttachments": [
+          {
+            "questionAttachmentId": 1,
+            "commentId": 1,
+            "attachmentUrl": "Comments_Attachments/271021_112924_1635316156880.jpg",
+            "isDocType": 1
+          }
+        ],
+        "commentReplies": [
+          {
+            "commentId": 3,
+            "parentCommentId": 1,
+            "questionId": 2,
+            "comment": "reply 123",
+            "commentBy": "Admin",
+            "commentById": "1",
+            "commentAt": "18 Seconds ago",
+            "commentByUrl": "Attachments/ProfilePics/241021_072035_0B8BD158_085F_4F1C_A16C_6AE1BCA1D380.jpeg",
+            "replyToId": 1,
+            "replyToName": "Admin"
+          },
+          {
+            "commentId": 4,
+            "parentCommentId": 1,
+            "questionId": 2,
+            "comment": "Awais is Testing Comments",
+            "commentBy": "Awais",
+            "commentById": "1",
+            "commentAt": "Just now",
+            "commentByUrl": "Attachments/ProfilePics/241021_072035_0B8BD158_085F_4F1C_A16C_6AE1BCA1D380.jpeg",
+            "replyToId": 1,
+            "replyToName": "Admin"
+          },
+          {
+            "commentId": 5,
+            "parentCommentId": 1,
+            "questionId": 2,
+            "comment": "Khan is making Comments",
+            "commentBy": "Awais",
+            "commentById": "1",
+            "commentAt": "a week ago",
+            "commentByUrl": "Attachments/ProfilePics/241021_072035_0B8BD158_085F_4F1C_A16C_6AE1BCA1D380.jpeg",
+            "replyToId": 1,
+            "replyToName": "Admin"
+          }
+        ]
+      },
+      {
+        "commentId": 2,
+        "parentCommentId": 0,
+        "questionId": 2,
+        "comment": "testing comments",
+        "commentBy": "Admin",
+        "commentById": "1",
+        "commentAt": "52 Seconds ago",
+        "commentByUrl": "Attachments/ProfilePics/241021_072035_0B8BD158_085F_4F1C_A16C_6AE1BCA1D380.jpeg",
+        "replyToId": 0,
+        "replyToName": ""
+      }
+    ]
+  },
+  "questionDetail": {
+    "questionId": 2,
+    "title": "lawyers query",
+    "description": "query",
+    "postedAt": "18 Hours ago",
+    "postedBy": "waseem fazal",
+    "postedById": "57",
+    "postedByProfileUrl": "Attachments/ProfilePics/261021_011659_5540755e_dfa4_4736_907f_010c37ef0054.jpeg",
+    "questionAttachments": [
+      {
+        "questionAttachmentId": 1,
+        "attachmentUrl": "Questions_Attachments/261021_051141_6a4740f5_3e80_4c92_b445_090c74406a19.jpeg",
+        "isDocType": 1
+      }
+    ]
+  }
+}
