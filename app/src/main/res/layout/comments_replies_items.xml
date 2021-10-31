@@ -88,6 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Reply"
+        android:onClick="@{() -> listener.onSubReplyClick()}"
         android:textSize="15sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/txt_comment_reply_time"
         app:layout_constraintEnd_toEndOf="parent"

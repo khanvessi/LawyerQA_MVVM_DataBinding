@@ -5,20 +5,23 @@
       <map>
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/drawable/ic_profile_white.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/drawable/ic_replying_cancel.xml" value="0.18333333333333332" />
+        <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/drawable/ic_replying_cancel_red.xml" value="0.14635416666666667" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/drawable/ic_upload.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/drawable/round.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/drawable/round_edttext.xml" value="0.18854166666666666" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/drawable/round_image.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/drawable/round_white.xml" value="0.20416666666666666" />
-        <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/activity_main.xml" value="0.22913117546848383" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/comment_upload_attachment_item.xml" value="0.25" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/comments_item.xml" value="0.25" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/comments_items_items_images.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/comments_replies_attachments_items.xml" value="0.1" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/comments_replies_items.xml" value="0.25" />
+        <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/file_paths.xml" value="0.17239583333333333" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/fragment_action.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/fragment_action_replies.xml" value="0.18802083333333333" />
         <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/layout/image_items.xml" value="0.7322834645669292" />
+        <entry key="..\:/Users/Khan/AndroidStudioProjects/LegalQA/app/src/main/res/xml/file_paths.xml" value="0.17239583333333333" />
       </map>
     </option>
   </component>

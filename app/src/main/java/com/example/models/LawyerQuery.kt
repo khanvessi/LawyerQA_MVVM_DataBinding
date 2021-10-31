@@ -89,21 +89,21 @@ data class CommentReplies(
 
 data class QuestionDetail(
     @SerializedName("questionId")
-    val questionId: Int,
+    val questionId: Int = 0,
     @SerializedName("title")
-    val title: String,
+    val title: String = "",
     @SerializedName("description")
-    val description: String,
+    val description: String = "",
     @SerializedName("postedAt")
-    val postedAt: String,
+    val postedAt: String = "",
     @SerializedName("postedBy")
-    val postedBy: String,
+    val postedBy: String = "",
     @SerializedName("postedById")
-    val postedById: Int,
+    val postedById: Int = 0,
     @SerializedName("postedByProfileUrl")
-    val postedByProfileUrl: String,
+    val postedByProfileUrl: String = "",
     @SerializedName("questionAttachments")
-    val questionAttachmentsList: List<QuestionAttachments>
+    val questionAttachmentsList: List<QuestionAttachments> = arrayListOf()
 ){
 
 }
