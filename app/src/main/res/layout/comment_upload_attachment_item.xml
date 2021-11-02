@@ -40,9 +40,10 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:elevation="5dp"
-            android:src="@drawable/ic_replying_cancel_red"
             android:onClick="@{() -> listener.onRemoveImageClick(position)}"
+            android:src="@drawable/ic_replying_cancel_red"
             app:layout_constraintEnd_toEndOf="@+id/cardView2"
+            app:layout_constraintHorizontal_bias="0.42"
             app:layout_constraintStart_toEndOf="@+id/cardView2"
             app:layout_constraintTop_toTopOf="parent" />
 

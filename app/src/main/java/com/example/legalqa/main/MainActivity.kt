@@ -3,7 +3,6 @@ package com.example.legalqa.main
 import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -42,6 +41,13 @@ import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.view.marginTop
 import androidx.lifecycle.MutableLiveData
+import androidx.core.app.ActivityCompat.startActivityForResult
+import android.os.Environment
+import com.google.android.material.snackbar.Snackbar
+import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -56,6 +62,7 @@ class MainActivity : AppCompatActivity() {
     var commentsRepliesAdapter: CommentsRepliesAdapter? = null
     private val PERMISSION_CODE = 2000
     private val CAMERA_REQUEST = 0
+    var mCurrentPhotoPath: String? = null
 
     //REQUEST CODES
     private val CAMERA_CODE = 101
@@ -72,6 +79,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        binding.mainViewModel = mainViewModel
         setContentView(binding.root)
 
         mainViewModel.getDataFromJson(applicationContext)
@@ -91,21 +99,8 @@ class MainActivity : AppCompatActivity() {
 //            }
 //            edtReplying.layoutParams = margins
 
-            imgbtnUpload.setOnClickListener(View.OnClickListener {
-                checkPermissions()
-//                attachOnReplying.visibility = View.VISIBLE
-            })
-//
-//            imgbtnSend.setOnClickListener(View.OnClickListener {
-//
-//            })
-
             edtReplying.setOnClickListener(View.OnClickListener {
                 //txtReplytoadmin.visibility = View.VISIBLE
-            })
-
-            txtReplytoadmin.setOnClickListener(View.OnClickListener {
-                txtReplytoadmin.visibility = View.GONE
             })
 
             txtCommentAll.setOnClickListener(View.OnClickListener {
@@ -125,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                 it.setBackgroundResource(R.drawable.round)
                 txtCommentAll.setTextColor(Color.WHITE)
 
-                recCommentsNorecords.visibility = View.GONE
+                txtNoRecords.visibility = View.GONE
                 recComments.visibility = View.VISIBLE
 
             })
@@ -147,7 +142,9 @@ class MainActivity : AppCompatActivity() {
                 it.setBackgroundResource(R.drawable.round)
                 txtCommentToday.setTextColor(Color.WHITE)
 
-                recCommentsNorecords.visibility = View.VISIBLE
+                txtNoRecords.visibility = View.VISIBLE
+                recComments.visibility = View.GONE
+
             })
 
             txtCommentYesterday.setOnClickListener(View.OnClickListener {
@@ -167,7 +164,8 @@ class MainActivity : AppCompatActivity() {
                 it.setBackgroundResource(R.drawable.round)
                 txtCommentYesterday.setTextColor(Color.WHITE)
 
-                recCommentsNorecords.visibility = View.VISIBLE
+                txtNoRecords.visibility = View.VISIBLE
+                recComments.visibility = View.GONE
 
             })
 
@@ -189,7 +187,8 @@ class MainActivity : AppCompatActivity() {
                 it.setBackgroundResource(R.drawable.round)
                 txtCommentLastweek.setTextColor(Color.WHITE)
 
-                recCommentsNorecords.visibility = View.VISIBLE
+                txtNoRecords.visibility = View.VISIBLE
+                recComments.visibility = View.GONE
 
             })
 
@@ -210,21 +209,38 @@ class MainActivity : AppCompatActivity() {
                 it.setBackgroundResource(R.drawable.round)
                 txtCommentLastmonth.setTextColor(Color.WHITE)
 
-                recCommentsNorecords.visibility = View.VISIBLE
+                txtNoRecords.visibility = View.VISIBLE
+                recComments.visibility = View.GONE
 
             })
 
 
         }
 
+        //OBSERVING CLICKS ON SUB REPLIES THREE DOTS
+        mainViewModel.observerForSubRepliesThreedots.observe(this){
+            if(it == true){
+                //Log.e(TAG, "bind: ACCTION REPLYINNG USER", )
+                actionCommentRepliesFragment.show(
+                    supportFragmentManager,
+                    actionCommentRepliesFragment.tag
+                )
+                mainViewModel.observerForSubRepliesThreedots.value = false
+            }
+        }
+
+        //OVERSERVING CLICKS ON SUB REPIES
+        mainViewModel.observerForSubReplies.observe(this){
+                binding.txtReplytoadmin.visibility = View.VISIBLE
+                binding.txtReplytoadmin.text = "Replying to $it"
+                mainViewModel.observerForSubReplies1.value = true
+        }
+
         lifecycleScope.launchWhenCreated {
             commentsAdapter?.commentEventChannelFromAdapter?.collect { event ->
                 when (event) {
                     CommentsAdapter.CommentEvent.OpenActionForReplyingUser -> {
-                        actionCommentRepliesFragment.show(
-                            supportFragmentManager,
-                            actionCommentRepliesFragment.tag
-                        )
+                        //NOT USING THIS
                     }
                 }.exhaustive
             }
@@ -241,11 +257,14 @@ class MainActivity : AppCompatActivity() {
                                         supportFragmentManager,
                                         directionFragment.tag
                                     )
+                                }, { comment ->
+//                                    Log.e(TAG, "onCreate: REPLY CLICKED")
+                                    binding.txtReplytoadmin.visibility = View.VISIBLE
+                                    binding.txtReplytoadmin.text = "Replying to ${comment.commentBy}"
+                                    mainViewModel.isReplying.value = true
+                                    mainViewModel.observeIsplaying.value = comment
                                 }, {
-                                    Log.e(TAG, "onCreate: REPLY CLICKED")
-                                    //TODO HAN
-                                   // DLE REPLY LOGIC HERE
-                                }, {
+
                                     if(flag == 0){
                                         mainViewModel.isShowClicked.value = true
                                         mainViewModel.clickedPosition.value = it
@@ -253,16 +272,23 @@ class MainActivity : AppCompatActivity() {
                                     }else{
                                         mainViewModel.isShowClicked.value = false
                                         mainViewModel.clickedPosition.value = it
-
                                         flag = 0
                                     }
-                                }), mainViewModel.isShowClicked,this@MainActivity, mainViewModel.clickedPosition )
+                                }), mainViewModel.isShowClicked,
+                                    this@MainActivity,
+                                    mainViewModel.clickedPosition,
+                                    mainViewModel.observerForSubRepliesThreedots,
+                                    mainViewModel.observerForSubReplies,
+
+                                )
                             }
 
                         binding.questionDetails = event.questionDetail
                         binding.recComments.adapter = commentsAdapter
                         binding.recComments.layoutManager = LinearLayoutManager(applicationContext)
                         binding.recComments.setHasFixedSize(true)
+
+                        binding.edtReplying.text = null
                     }
 
                     //QUESTIONATTACHMENT
@@ -281,11 +307,42 @@ class MainActivity : AppCompatActivity() {
 
                     //ON UPLOAD BTNCLICK
                     MainViewModel.MainActivityEvent.OnUploadBtnClicked -> {
-                        Log.e(TAG, "onCreate: ON UPLOAD CLICK")
+//                        Log.e(TAG, "onCreate: ON UPLOAD CLICK")
                         checkPermissions()
-//                        listOfAttachmentUrls =
-//                            lawyerQuery.comment.comments.firstOrNull()?.commentAttachment!!
-//                        arrayListOfAttachments = listOfAttachmentUrls as ArrayList
+                    }
+
+                    //VALIDATION
+                    MainViewModel.MainActivityEvent.ShowValidationMessage -> {
+                        Snackbar.make(
+                            findViewById(android.R.id.content),
+                            "Please type the comment!",
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .setAction("OK") {
+
+                            }
+                            .setBackgroundTint(Color.rgb(222,171,82))
+                            .setTextColor(Color.BLACK)
+                            .show()
+                    }
+
+                    //SUCCES SENDING COMMENT
+                    MainViewModel.MainActivityEvent.ShowSuccessComment -> {
+                        Snackbar.make(
+                            findViewById(android.R.id.content),
+                            "Comment posted!",
+                            Snackbar.LENGTH_SHORT
+                        )
+                            .setAction("Cancel") {
+                            }
+                            .setBackgroundTint(Color.rgb(222,171,82))
+                            .setTextColor(Color.BLACK)
+                            .show()
+                    }
+
+                    //ON CANCEL REPLYING TO
+                    MainViewModel.MainActivityEvent.OnCancelReplyingTo -> {
+                        binding.txtReplytoadmin.visibility = View.GONE
                     }
                 }.exhaustive
             }
@@ -304,10 +361,14 @@ class MainActivity : AppCompatActivity() {
             && ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_DENIED &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
             ) == PackageManager.PERMISSION_DENIED
         ) {
             requestPermissions(
-                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA),
+                arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE),
                 PERMISSION_CODE
             )
         } else {
@@ -331,13 +392,13 @@ class MainActivity : AppCompatActivity() {
 //            })
 //        myAlertDialog.show()
 
-        val choice = arrayOf("Take a Picture", "Image", "Video", "File")
+        val choice = arrayOf("Camera", "Image", "Video", "File")
 
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Choose an Attachment")
         builder.setItems(choice) { dialog, which ->
             // the user clicked on colors[which]
-            if ("Take a Picture" == choice[which]) {
+            if ("Camera" == choice[which]) {
                 openCamera()
             } else if ("Image" == choice[which]) {
                 openGallery()
@@ -356,6 +417,46 @@ class MainActivity : AppCompatActivity() {
     private fun openCamera() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
         startActivityForResult(cameraIntent, CAMERA_CODE)
+
+//        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        if (cameraIntent.resolveActivity(packageManager) != null) {
+//            Log.e(TAG, "openCamera: NOT NULL", )
+//            // Create the File where the photo should go
+//            var photoFile: File? = null
+//            try {
+//                photoFile = createImageFile()
+//            } catch (ex: IOException) {
+//                // Error occurred while creating the File
+//                Log.i(TAG, "EXEPTION: "+ex.message)
+//            }
+//            // Continue only if the File was successfully created
+//            if (photoFile != null) {
+//                Log.e(TAG, "openCamera: NOT NULL", )
+//                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile))
+//                startActivityForResult(cameraIntent, CAMERA_CODE)
+//            }
+//        }
+    }
+
+    @SuppressLint("SimpleDateFormat")
+    @Throws(IOException::class)
+    private fun createImageFile(): File? {
+        // Create an image file name
+        val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
+        val imageFileName = "JPEG_" + timeStamp + "_"
+        val storageDir: File = Environment.getExternalStoragePublicDirectory(
+            Environment.DIRECTORY_PICTURES
+        )
+        val image: File = File.createTempFile(
+            imageFileName,  // prefix
+            ".jpg",  // suffix
+            storageDir // directory
+        )
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = "file:" + image.absolutePath
+//        Log.e(TAG, "createImageFile: FILE $mCurrentPhotoPath", )
+        return image
     }
 
 //    private fun openImage() {
@@ -370,8 +471,13 @@ class MainActivity : AppCompatActivity() {
 
 
     private fun openGallery() {
-        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(galleryIntent, IMAGE_CODE)
+//        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//        startActivityForResult(galleryIntent, IMAGE_CODE)
+
+        val intent = Intent()
+        intent.type = "image/*"
+        intent.action = Intent.ACTION_GET_CONTENT
+        startActivityForResult(intent,IMAGE_CODE)
     }
 
     private fun openVideo() {
@@ -409,11 +515,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         val cmtAttachment = CommentAttachment()
 
-        if (requestCode == CAMERA_CODE) {
+        if (requestCode == CAMERA_CODE && resultCode == RESULT_OK) {
+//            Log.e(TAG, "onActivityResult: IMAGE PATH $mCurrentPhotoPath", )
+
             if (data?.data != null) {
                 val uri = data.data
                 Log.e("Gallery Image Uri: ", uri.toString() + "")
@@ -430,9 +539,11 @@ class MainActivity : AppCompatActivity() {
             }
 
         }
-        if (requestCode == IMAGE_CODE) {
+
+
+        if (requestCode == IMAGE_CODE && resultCode != RESULT_CANCELED) {
             if (data?.extras?.get("data") != null) {
-                val uri = data.extras?.get("data")
+                val uri = data?.extras?.get("data")
                 val tempUri: Uri =
                     getImageUri(this, uri as Bitmap)
 
@@ -443,12 +554,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (requestCode == VIDEO_CODE) {
-            Log.e(TAG, "onActivityResult: VIDEO " )
+//            Log.e(TAG, "onActivityResult: VIDEO " )
             if (data?.extras?.get("data") != null) {
                 binding.attachOnReplying.visibility = View.VISIBLE
                 val uri = data.data
                 val path = uri?.path
-                Log.e(TAG, "onActivityResult: VIDEO $path" )
+//                Log.e(TAG, "onActivityResult: VIDEO $path" )
 
 //                val uri = data.extras?.get("data")
 //                val tempUri: Uri =
@@ -461,12 +572,12 @@ class MainActivity : AppCompatActivity() {
         }
 //
         if (requestCode == FILE_CODE) {
-            Log.e(TAG, "onActivityResult: FILE ")
+//            Log.e(TAG, "onActivityResult: FILE ")
             if (data?.extras?.get("data") != null) {
                 binding.attachOnReplying.visibility = View.VISIBLE
                 val uri = data.data
                 val path = uri?.path
-                Log.e(TAG, "onActivityResult: FILE $path")
+//                Log.e(TAG, "onActivityResult: FILE $path")
 
 
 //                val uri = data.extras?.get("data")
@@ -486,7 +597,7 @@ class MainActivity : AppCompatActivity() {
         arrayListOfAttachments.add(commentAttachment)
         //listOfAttachmentUrls = arrayListOfAttachments
         mainViewModel.listOfCommentsAttachments.value = arrayListOfAttachments
-        Log.e(TAG, "addCommentAttachment: ${listOfAttachmentUrls.lastIndex}")
+//        Log.e(TAG, "addCommentAttachment: ${listOfAttachmentUrls.lastIndex}")
         addAttachmentListToRecView()
     }
 
@@ -509,9 +620,7 @@ class MainActivity : AppCompatActivity() {
                     LinearLayoutManager(applicationContext, LinearLayoutManager.HORIZONTAL, false)
                 setHasFixedSize(true)
             }
-
-            txtReplytoadmin.visibility = View.VISIBLE
-
+            attachOnReplying.visibility = View.VISIBLE
         }
 
     }
@@ -529,7 +638,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        Log.e(TAG, "getRealPathFromURI: $path", )
+//        Log.e(TAG, "getRealPathFromURI: $path")
         return path
     }
 

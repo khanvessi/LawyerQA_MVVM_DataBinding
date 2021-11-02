@@ -17,6 +17,7 @@
         android:layout_height="match_parent">
 
     <ScrollView
+        android:id="@+id/scrollable"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -152,10 +153,12 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:scrollbarSize="0dp"
+                android:layout_marginBottom="30dp"
                 app:layout_constraintBottom_toTopOf="@+id/rec_comments"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/recviewImages">
+                app:layout_constraintTop_toBottomOf="@+id/txt_no_records"
+                app:layout_constraintVertical_bias="0.88">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -170,7 +173,6 @@
                         android:background="@drawable/round"
                         android:padding="5dp"
                         android:text="All"
-                        android:onClick="@{() -> mainViewModel.test1()}"
                         android:textAlignment="center"
                         android:textColor="@color/white"
                         android:textSize="14dp"
@@ -241,32 +243,23 @@
                 tools:itemCount="3"
                 tools:listitem="@layout/comments_item" />
 
+
             <TextView
-                android:id="@+id/rec_comments_norecords"
-                android:layout_width="409dp"
-                android:layout_height="280dp"
-                android:background="#deab52"
-                android:elevation="4dp"
-                android:paddingTop="20dp"
-                android:text="No Records Found"
+                android:id="@+id/txt_no_records"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="No Records Matched"
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="25dp"
-                android:textStyle="bold"
+                android:textSize="20dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/scrollView2" />
-
-
+                />
 
 
             <!--        android:onClick="@{() -> mainViewModel.onUploadBtnClick()}"-->
-
-
-
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -280,6 +273,7 @@
             android:layout_marginEnd="16dp"
             android:background="@color/white"
             android:elevation="10dp"
+            android:onClick="@{() -> mainViewModel.onUploadBtnClick()}"
             app:layout_constraintBottom_toBottomOf="@+id/imgbtn_send"
             app:layout_constraintEnd_toStartOf="@+id/imgbtn_send"
             app:layout_constraintTop_toTopOf="@+id/imgbtn_send"
@@ -294,7 +288,7 @@
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="20dp"
             android:elevation="10dp"
-            android:onClick="@{() -> mainViewModel.test()}"
+            android:onClick="@{() -> mainViewModel.onSendComment()}"
             app:layout_constraintBottom_toBottomOf="@+id/edt_replying"
             app:layout_constraintEnd_toEndOf="@+id/edt_replying"
             app:layout_constraintTop_toTopOf="@+id/edt_replying"
@@ -313,6 +307,7 @@
             android:textAlignment="viewStart"
             android:textSize="15dp"
             android:visibility="gone"
+            android:onClick="@{() -> mainViewModel.onCancelReplyingTo()}"
             app:layout_constraintBottom_toTopOf="@+id/attach_on_replying"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -329,6 +324,8 @@
             app:layout_constraintBottom_toTopOf="@+id/edt_replying"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
+
+
 
         <EditText
             android:id="@+id/edt_replying"

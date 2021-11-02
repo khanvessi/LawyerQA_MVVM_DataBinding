@@ -42,7 +42,7 @@ data class Comments(
     @SerializedName("commentAttachments")
     val commentAttachment: List<CommentAttachment>,
     @SerializedName("commentReplies")
-    val commentReplies: List<CommentReplies>,
+    val commentReplies: MutableList<CommentReplies>,
 ){
 
 }
